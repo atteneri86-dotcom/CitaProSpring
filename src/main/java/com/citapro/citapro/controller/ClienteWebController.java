@@ -23,7 +23,7 @@ public class ClienteWebController {
     }
 
     @PostMapping("/guardar-cliente")
-    public String guardarCliente(@Valid @ModelAttribute("cliente") Cliente cliente,
+    public String guardarCliente(@Valid @ModelAttribute Cliente cliente,
                                  BindingResult result,
                                  Model model) {
 
@@ -36,15 +36,15 @@ public class ClienteWebController {
         return "redirect:/formulario-cliente";
     }
 
-    @GetMapping("/editar-cliente/{id}")
+    @GetMapping("/editar/{id}")
     public String editarCliente(@PathVariable Long id, Model model) {
-        Cliente cliente = clienteRepository.findById(id).orElseThrow();
+        Cliente cliente = clienteRepository.findById(id).orElse(null);
         model.addAttribute("cliente", cliente);
         model.addAttribute("clientes", clienteRepository.findAll());
         return "formulario-cliente";
     }
 
-    @GetMapping("/borrar-cliente/{id}")
+    @GetMapping("/borrar/{id}")
     public String borrarCliente(@PathVariable Long id) {
         clienteRepository.deleteById(id);
         return "redirect:/formulario-cliente";
