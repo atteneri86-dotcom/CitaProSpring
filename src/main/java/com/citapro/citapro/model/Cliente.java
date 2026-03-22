@@ -1,9 +1,7 @@
 package com.citapro.citapro.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 public class Cliente {
@@ -12,8 +10,14 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
+
+    @NotBlank(message = "El teléfono es obligatorio")
     private String telefono;
+
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "El email no es válido")
     private String email;
 
     public Cliente() {
@@ -27,6 +31,10 @@ public class Cliente {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {   // 🔥 necesario para editar
+        this.id = id;
     }
 
     public String getNombre() {
