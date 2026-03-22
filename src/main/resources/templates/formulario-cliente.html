@@ -2,22 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>CitaPro Canarias</title>
+    <title>CitaPro - Clientes</title>
 
     <style>
         body {
             font-family: Arial;
-            background-color: #f5f7fa;
+            background-color: #f4f6f8;
             padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .subtitulo {
-            text-align: center;
-            color: gray;
         }
 
         .container {
@@ -28,28 +19,47 @@
         .card {
             background: white;
             padding: 20px;
-            border-radius: 10px;
             margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
         }
 
         input {
             width: 100%;
             padding: 8px;
-            margin-bottom: 5px;
         }
 
-        .btn {
+        button {
             width: 100%;
             padding: 10px;
-            background: blue;
+            background-color: #4a6cf7;
             color: white;
             border: none;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
         }
 
         .error {
             color: red;
             font-size: 12px;
-            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -58,38 +68,43 @@
 
 <div class="container">
 
-    <h1>CitaPro Canarias</h1>
-    <p class="subtitulo">Gestión básica de clientes</p>
-
+    <!-- FORMULARIO -->
     <div class="card">
         <h2 th:text="${cliente.id != null} ? 'Editar cliente' : 'Nuevo cliente'"></h2>
 
         <form th:action="@{/guardar-cliente}" th:object="${cliente}" method="post">
 
-            <input type="hidden" th:field="*{id}" />
+            <!-- IMPORTANTE PARA EDITAR -->
+            <input type="hidden" th:field="*{id}"/>
 
-            <label>Nombre</label>
-            <input type="text" th:field="*{nombre}">
-            <div class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" th:field="*{nombre}">
+                <div class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+            </div>
 
-            <label>Email</label>
-            <input type="email" th:field="*{email}">
-            <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" th:field="*{email}">
+                <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
 
-            <label>Teléfono</label>
-            <input type="text" th:field="*{telefono}">
-            <div class="error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></div>
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input type="text" th:field="*{telefono}">
+                <div class="error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></div>
+            </div>
 
-            <button class="btn" type="submit"
-                    th:text="${cliente.id != null} ? 'Actualizar cliente' : 'Guardar cliente'">
-            </button>
+            <button type="submit">Guardar cliente</button>
         </form>
     </div>
 
+    <!-- TABLA -->
     <div class="card">
         <h2>Clientes guardados</h2>
 
-        <table border="1" width="100%">
+        <table>
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Nombre</th>
@@ -97,17 +112,23 @@
                 <th>Teléfono</th>
                 <th>Acciones</th>
             </tr>
+            </thead>
 
+            <tbody>
             <tr th:each="cliente : ${clientes}">
                 <td th:text="${cliente.id}"></td>
                 <td th:text="${cliente.nombre}"></td>
                 <td th:text="${cliente.email}"></td>
                 <td th:text="${cliente.telefono}"></td>
                 <td>
-                    <a th:href="@{/editar-cliente/{id}(id=${cliente.id})}">Editar</a> |
-                    <a th:href="@{/borrar-cliente/{id}(id=${cliente.id})}">Borrar</a>
+                    <a th:href="@{/editar/{id}(id=${cliente.id})}">Editar</a> |
+                    <a th:href="@{/borrar/{id}(id=${cliente.id})}"
+                       onclick="return confirm('¿Seguro que quieres borrar este cliente?')">
+                        Borrar
+                    </a>
                 </td>
             </tr>
+            </tbody>
         </table>
     </div>
 
